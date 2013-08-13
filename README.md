@@ -60,3 +60,17 @@ Basically, the field map for Fiona is:
                              DateTimeField: "str"}
 
 ```
+
+## Usage
+
+To write shapefiles you can use the ShapefileWriter factory class.
+
+Just do:
+
+```python
+    shp_writer = ShapefileWriter.create(engine=ENGINE_FIONA)
+    # django queryset, "list of field names to be exported", "string with name of geofield", "string with output filename", "output projection"
+    shp_writer.write_records(queryset, self.get_attributes(), geofield, tmp_name, self.proj_transform)
+```
+
+To return zipped shapefiles from a queryset, use the shaperesponder view.
