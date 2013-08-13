@@ -1,6 +1,7 @@
 # coding: utf-8
-from . import *
 from django.contrib.gis.gdal.field import ROGRFieldTypes
+
+from . import *
 
 
 class FieldMap(object):

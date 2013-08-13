@@ -1,7 +1,7 @@
 # coding: utf-8
+import json
 from django.contrib.gis.gdal import OGRGeomType, SpatialReference, CoordTransform
 from . import *
-import json
 from .field_map import FieldMapper
 
 
