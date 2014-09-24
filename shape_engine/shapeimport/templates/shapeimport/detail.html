@@ -1,0 +1,43 @@
+{% block content %}
+<section>
+    <div class='row-fluid'>
+        <legend>Shape Import Details:</legend>
+    </div>
+
+    <div class='row-fluid'>
+        <label>File:</label> <a href="{{ object.shapefile.url }}">{{ object.file_name }}</a>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span4">
+            <label>Features:</label> {{ logs|length }}
+        </div>
+    </div>    
+</section>
+<br style='clear:both;'/>
+<section class='clearfix'>
+    <div class='row-fluid'>
+        <legend>Feature Log</legend>
+    </div>
+    <div class='row-fluid'>
+        <table class='table table-bordered'>
+            <thead>
+                <tr>
+                    <th>FID</th>
+                    <th>Success?</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.fid }}</td>
+                    <td>{{ log.success }}</td>
+                </tr>
+                {% empty %}
+                    <tr><td colspan='3'>No features found</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
