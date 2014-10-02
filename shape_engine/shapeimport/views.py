@@ -1,18 +1,17 @@
 from django.shortcuts import get_object_or_404, redirect
+from django.http import Http404
 from django.views.generic.edit import CreateView, FormView
 from django.views.generic.detail import DetailView
 
-from shapeimport.settings import TEMPLATE_PREFIX
-from shapeimport.forms import (
+from forms import (
     build_shapeimport_form, build_fields_form,
-    DONT_IMPORT_KEY, FEATURE_GEOMETRY_KEY
+    DONT_IMPORT_KEY
 )
-from shapeimport.util import ShapefileReader
+from util import ShapefileReader
 
 
 class ShapeImportCreateView(CreateView):
 
-    template_name = '{}/create.html'.format(TEMPLATE_PREFIX)
     fields = ['shapefile']
 
     def get_form_class(self):
@@ -26,18 +25,21 @@ class ShapeImportCreateView(CreateView):
 
 class ShapeImportDetailView(DetailView):
 
-    template_name = '{}/detail.html'.format(TEMPLATE_PREFIX)
-
     def get_context_data(self, **kwargs):
         context = super(ShapeImportDetailView, self).get_context_data(**kwargs)
         obj = context['object']
-        context['logs'] = self.model.log_class.objects.filter(shape_import=obj)
+        
+        if not obj.finished:
+            raise Http404
+
+        context['logs'] = (self.model.log_class.objects
+                                               .filter(shape_import=obj)
+                                               .order_by('fid'))
         return context
 
 
 class ShapeImportFieldsView(FormView):
 
-    template_name = '{}/create.html'.format(TEMPLATE_PREFIX)
     shape_import = None
     shape_file = None
 
@@ -45,6 +47,9 @@ class ShapeImportFieldsView(FormView):
         self.shape_import = get_object_or_404(
             self.model, pk=kwargs['pk']
         )
+
+        if self.shape_import.finished:
+            raise Http404
 
         self.shape_file = getattr(
             self.shape_import, self.shape_import.shape_field
@@ -97,9 +102,9 @@ class ShapeImportFieldsView(FormView):
 
         for key in mapping:
             if mapping[key] != DONT_IMPORT_KEY:
-                if mapping[key] == FEATURE_GEOMETRY_KEY:
-                    setattr(obj, key, feature.geom.wkt)
-                else:
-                    setattr(obj, key, feature[mapping[key]])
+                # if mapping[key] == FEATURE_GEOMETRY_KEY:
+                #    setattr(obj, key, feature.geom.wkt)
+                # else:
+                setattr(obj, key, feature[mapping[key]])
 
         obj.save()

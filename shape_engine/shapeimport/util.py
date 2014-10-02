@@ -8,9 +8,9 @@ import abc
 import mimetypes
 
 from django.contrib.gis import gdal
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
-from exceptions import ZipShapeError
+from exceptions import CompressedShapeError, HandlerNotFound, HandlerError
 
 
 class ShapefileHandler(object):
@@ -37,7 +37,7 @@ class HandlerFactory(object):
     @classmethod
     def register_handler(cls, handler_class):
         if not issubclass(handler_class, ShapefileHandler):
-            raise Exception("n implementa a interface rs")
+            raise HandlerError(_(u"Handler must inherit from ShapefileHandler"))
         cls._handlers.add(handler_class)
         return handler_class
 
@@ -52,7 +52,8 @@ class HandlerFactory(object):
             if content_type in handler.MIME_TYPES:
                 return handler(file)
 
-        raise Exception("Não achou ninguém que abre")
+        raise HandlerNotFound(_(u"Unrecognized file type."))
+
 shapefile_handler = HandlerFactory.register_handler
 
 
@@ -63,21 +64,41 @@ class ZipShapefileHandler(ShapefileHandler):
         'application/zip',
         'application/x-zip',
         'application/x-zip-compressed',
-        'application/octet-stream',
         'application/x-compress',
         'application/x-compressed',
         'multipart/x-zip',
     )
 
     def __init__(self, file):
-        self._file = zipfile.ZipFile(file)
+        try:
+            self._file = zipfile.ZipFile(file)
+
+        except zipfile.BadZipfile:
+            raise HandlerError(
+                _("Invalid zip file, it's either corrupted or "
+                  "not a zip.")
+            )
 
     @property
     def namelist(self):
-        return self._file.namelist()
+        try:
+            return self._file.namelist()
+
+        except zipfile.BadZipfile:
+            raise HandlerError(
+                _("Invalid zip file, it's either corrupted or "
+                  "not a zip.")
+            )
 
     def extract(self, dir):
-        self._file.extractall(dir)
+        try:
+            self._file.extractall(dir)
+
+        except zipfile.BadZipfile:
+            raise HandlerError(
+                _("Invalid zip file, it's either corrupted or "
+                  "not a zip.")
+            )
 
 
 class ShapefileReader(object):
@@ -122,8 +143,8 @@ class ShapefileReader(object):
             if not files_name:
                 files_name = fname
             elif fname != files_name:
-                raise ZipShapeError(_(u'The files are not all from the same  '
-                                      u'shapefile.'))
+                raise CompressedShapeError(_(u'The files are not all from '
+                                             u'the same shapefile.'))
 
             if ext == '.shp':
                 shapefile_name = name
@@ -131,8 +152,9 @@ class ShapefileReader(object):
             ext_set.discard(ext)
 
         if ext_set:
-            raise ZipShapeError(_(u'The following files are missing in the '
-                                  u'shapefile: {}').format(list(ext_set)))
+            raise CompressedShapeError(_(u'The following files are missing '
+                                         u'in the shapefile: {}')
+                                       .format(list(ext_set)))
 
         handler.extract(self._tmp_dir)
         shapefile_path = os.path.join(self._tmp_dir, shapefile_name)

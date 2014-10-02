@@ -3,8 +3,10 @@ from django import forms
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.exceptions import ValidationError
 from django.contrib.gis import gdal
+from django.utils.translation import ugettext_lazy as _
 
 from util import ShapefileReader
+from exceptions import HandlerNotFound, HandlerError, CompressedShapeError
 
 
 class ShapefileField(forms.FileField):
@@ -21,15 +23,19 @@ class ShapefileField(forms.FileField):
 
                 except gdal.error.OGRException:
                     raise forms.ValidationError(
-                        u"Erro ao processar o shape, "
-                        u"o arquivo está corrompido."
-                    )
+                        _(u"Error while processing the shapefile, "
+                          u"the file is corrupted.")
+                )
+
+                except (HandlerError, 
+                        HandlerNotFound,
+                        CompressedShapeError) as e:
+                    raise forms.ValidationError(e.message)
 
         return shape
 
 
-DONT_IMPORT_KEY = '__si_none'
-FEATURE_GEOMETRY_KEY = '__si_geom'
+DONT_IMPORT_KEY = '__SI_NONE'
 
 
 class FieldsForm(forms.Form):
@@ -37,21 +43,12 @@ class FieldsForm(forms.Form):
     def data_mapping(self):
         return {field: self.cleaned_data[field] for field in self.fields}
 
-    @property
-    def geom_fields(self):
-        return {key: self.data_mapping[key] for key in self.data_mapping
-                if self.data_mapping[key] == FEATURE_GEOMETRY_KEY}
-
     def clean(self, *args, **kwargs):
         non_empty = len([key for key in self.data_mapping
                          if self.data_mapping[key] != DONT_IMPORT_KEY])
 
         if not non_empty:
-            raise ValidationError(u"There aren't any fields to map")
-
-        if not self.geom_fields:
-            raise ValidationError(u"You must chose a field to map the geometry"
-                                  u"of the feature to")
+            raise ValidationError(_(u"There aren't any fields to map."))
 
         return super(FieldsForm, self).clean(*args, **kwargs)
 
@@ -85,21 +82,20 @@ def build_fields_form(model, shape_fields):
     """ Creates a generic shape field import form for a Model """
 
     choices = [
-        (DONT_IMPORT_KEY, u"Don't import"),
-        (FEATURE_GEOMETRY_KEY, u'Feature Geometry'),
+        (DONT_IMPORT_KEY, _(u"Don't import"))
     ]+zip(shape_fields, shape_fields)
 
     fields = {}
     for field in model.import_fields:
         fields[field] = forms.ChoiceField(
-            label=u"Field on the shapefile to be used as the value for '{}'"
+            label=_(u"Field on the shapefile to be used as the value for '{}'")
                   .format(field),
             choices=choices,
             required=False
         )
 
     fields_form = type(
-        "{}FieldsForm".format(model.target_model.__name__),
+        "{}FieldsForm".format(model.__name__),
         (FieldsForm,),
         fields
     )

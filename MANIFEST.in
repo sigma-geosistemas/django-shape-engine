@@ -1,1 +1,2 @@
-include shape_engine
+include MANIFEST.in
+recursive-include shape_engine

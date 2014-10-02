@@ -2,8 +2,7 @@ import os
 
 from django.db import models
 from django.db.models.fields import Field
-from django.utils.translation import ugettext_lazy as _lz
-from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
 import forms
 
@@ -27,18 +26,18 @@ class ShapeImportMixIn(models.Model):
         abstract = True
 
     shapefile = ShapefileField(
-        upload_to='media/shapeimport',
-        help_text=_lz(u'Compressed shapefile, must contain '
-                      u'the .shp, .shx, .dbf and .prj files')
+        upload_to='shapeimport',
+        help_text=_(u'Compressed shapefile, must contain '
+                    u'the .shp, .shx, .dbf and .prj files')
     )
     shape_field = 'shapefile'
 
     finished = models.BooleanField(
         default=False,
-        verbose_name=_lz(u'Finished?'),
-        help_text=_lz(u"Indicates wether or not the import of the shapefile."
-                      u"is finished (False means there's something pending, "
-                      u"such as choosing the fields to map to).")
+        verbose_name=_(u'Finished?'),
+        help_text=_(u"Indicates wether or not the import of the shapefile."
+                    u"is finished (False means there's something pending, "
+                    u"such as choosing the fields to map to).")
     )
 
     @property
@@ -46,10 +45,13 @@ class ShapeImportMixIn(models.Model):
         return os.path.basename(self.shapefile.name)
 
     def get_absolute_url(self):
-        if self.finished:
-            return reverse(self.detail_url, kwargs={'pk': self.pk})
-        else:
-            return reverse(self.fields_url, kwargs={'pk': self.pk})
+        return self.finished and self.get_detail_url() or self.get_fields_url()
+
+    def get_fields_url(self):
+        raise NotImplementedError
+
+    def get_detail_url(self):
+        raise NotImplementedError
 
     @property
     def import_model(self):
@@ -57,6 +59,10 @@ class ShapeImportMixIn(models.Model):
 
     @property
     def import_fields(self):
+        raise NotImplementedError
+
+    @property
+    def import_geometry(self):
         raise NotImplementedError
 
     @property
@@ -73,6 +79,6 @@ class ShapeImportLogMixIn(models.Model):
     def shape_import(self):
         raise NotImplementedError
 
-    fid = models.IntegerField(_lz(u'FID of the feature in the shapefile.'))
+    fid = models.IntegerField(_(u'FID of the feature in the shapefile.'))
     success = models.BooleanField(default=True)
     message = models.CharField(max_length=255)
