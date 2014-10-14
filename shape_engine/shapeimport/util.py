@@ -140,14 +140,14 @@ class ShapefileReader(object):
         for name in handler.namelist:
             fname, ext = os.path.splitext(name)
 
+            if ext not in ShapefileReader.REQUIRED_EXTENSIONS:
+                continue
+
             if not files_name:
-                files_name = fname
-            elif fname != files_name:
+                shapefile_name = fname
+            elif fname != shapefile_name:
                 raise CompressedShapeError(_(u'The files are not all from '
                                              u'the same shapefile.'))
-
-            if ext == '.shp':
-                shapefile_name = name
 
             ext_set.discard(ext)
 
@@ -157,6 +157,6 @@ class ShapefileReader(object):
                                        .format(list(ext_set)))
 
         handler.extract(self._tmp_dir)
-        shapefile_path = os.path.join(self._tmp_dir, shapefile_name)
+        shapefile_path = os.path.join(self._tmp_dir, shapefile_name+'.shp')
 
         return gdal.DataSource(shapefile_path)
