@@ -247,10 +247,10 @@ class FionaShapefileWriter(BaseShapefileWriter):
 
             if out_srid and out_srid != in_srid:
 
-                if type(out_srid) == 'int':
+                if type(out_srid) is int:
                     out_srid = SpatialReference(out_srid)
 
-                if type(in_srid) == 'int':
+                if type(in_srid) is int:
                     in_srid = SpatialReference(in_srid)
 
                 ct = CoordTransform(in_srid, out_srid)
