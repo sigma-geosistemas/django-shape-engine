@@ -1,6 +1,6 @@
 # coding: utf-8
 from django import forms
-from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.uploadedfile import UploadedFile
 from django.core.exceptions import ValidationError
 from django.contrib.gis import gdal
 from django.utils.translation import ugettext_lazy as _
@@ -12,7 +12,8 @@ from exceptions import HandlerNotFound, HandlerError, CompressedShapeError
 class ShapefileField(forms.FileField):
     def clean(self, *args, **kwargs):
         shape = super(ShapefileField, self).clean(*args, **kwargs)
-        if isinstance(shape, InMemoryUploadedFile):
+       
+        if isinstance(shape, UploadedFile):
             with ShapefileReader(shape) as reader:
                 try:
                     datasource = reader.datasource
