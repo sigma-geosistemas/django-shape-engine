@@ -157,8 +157,38 @@ class GeometryCoercerTestCase(unittest.TestCase):
 
 		multipoint3d = c.coerce(multipoint2d, dimensions=3)
 
-		self.assertTrue(test_coerce_multipoint_3dd.hasz)
+		self.assertTrue(multipoint3d.hasz)
 		self.assertEquals(multipoint3d.srid, multipoint2d.srid)
+
+	def test_coerce_multipolygon_2d(self):
+
+		c = GeometryCoercer()
+		p1 = Polygon(((0, 0, 1), (0, 1, 1), (1, 1, 1), (1, 0, 1), (0, 0, 1)), srid=4326)
+		p2 = Polygon(((2, 2, 1), (2, 3, 1), (3, 3, 1), (3, 2, 1), (2, 2, 1)), srid=4326)
+		multipolygon3d = MultiPolygon(p1, p2, srid=4326)
+
+		self.assertTrue(multipolygon3d.hasz)
+
+		multipolygon2d = c.coerce(multipolygon3d)
+
+		self.assertFalse(multipolygon2d.hasz)
+
+	def test_coerce_multipolygon_2d_with_holes(self):
+
+		c = GeometryCoercer()
+		exterior = ((0, 0, 1), (0, 1, 1), (1, 1, 1), (1, 0, 1), (0, 0, 1))
+		hole1 = ((0.5, 0.5), (0.5, 0.6), (0.6, 0.6), (0.6, 0.5), (0.5, 0.5))
+		hole2 = ((0.2, 0.2), (0.2, 0.3), (0.3, 0.3), (0.3, 0.2), (0.2, 0.2))
+		p1 = Polygon(exterior , hole1, hole2, srid=4326)
+		
+		p2 = Polygon(((2, 2, 1), (2, 3, 1), (3, 3, 1), (3, 2, 1), (2, 2, 1)), srid=4326)
+		multipolygon3d = MultiPolygon(p1, p2, srid=4326)
+
+		self.assertTrue(multipolygon3d.hasz)
+
+		multipolygon2d = c.coerce(multipolygon3d)
+
+		self.assertFalse(multipolygon2d.hasz)
 
 if __name__ == '__main__':
 	unittest.main()
