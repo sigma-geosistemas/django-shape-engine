@@ -91,9 +91,7 @@ class GeometryCoercer(object):
 
 			new_rings = [self._coerce_linearring(LinearRing(ring, srid=geometry.srid)) for ring in coords]
 			
-		outer_ring = new_rings[0].coords
-		inner_rings = [r.coords for r in new_rings[1:] if r is not None]
-		return Polygon(outer_ring, inner_rings, srid=geometry.srid)
+		return Polygon(*new_rings, srid=geometry.srid)
 
 	def _coerce_multipoint(self, geometry, dimensions=2, z_value=0):
 		
