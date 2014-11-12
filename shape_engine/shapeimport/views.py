@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect
+    from django.shortcuts import get_object_or_404, redirect
 from django.http import Http404
 from django.views.generic.edit import CreateView, FormView
 from django.views.generic.detail import DetailView
@@ -104,7 +104,8 @@ class ShapeImportFieldsView(FormView):
             if mapping[key] != DONT_IMPORT_KEY:
                 # if mapping[key] == FEATURE_GEOMETRY_KEY:
                 #    setattr(obj, key, feature.geom.wkt)
-                # else:
+                # else
+                
                 setattr(obj, key, feature[mapping[key]])
 
         obj.save()

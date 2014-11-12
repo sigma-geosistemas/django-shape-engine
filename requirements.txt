@@ -1,0 +1,4 @@
+Django
+GDAL
+# como instalar GDAL em um virtualenv
+# http://tylerickson.blogspot.com.br/2011/09/installing-gdal-in-python-virtual.html
