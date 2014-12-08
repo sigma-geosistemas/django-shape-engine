@@ -25,8 +25,7 @@ class ShapeImportMixIn(models.Model):
     class Meta:
         abstract = True
 
-    shapefile = ShapefileField(
-	label=_(u'Zipped shapefile.'),
+    shapefile = ShapefileField(_(u'Zipped shapefile.'),
         upload_to='shapeimport',
         help_text=_(u'Compressed shapefile, must contain '
                     u'the .shp, .shx, .dbf and .prj files')
