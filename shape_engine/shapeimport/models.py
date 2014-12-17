@@ -24,6 +24,7 @@ class ShapeImportMixIn(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['-created_at']
 
     shapefile = ShapefileField(
         upload_to='shapeimport',
@@ -38,6 +39,11 @@ class ShapeImportMixIn(models.Model):
         help_text=_(u"Indicates wether or not the import of the shapefile."
                     u"is finished (False means there's something pending, "
                     u"such as choosing the fields to map to).")
+    )
+
+    created_at = models.DateTimeField(
+        verbose_name=_(u'Created at'),
+        auto_now_add=True
     )
 
     @property

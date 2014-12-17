@@ -28,7 +28,7 @@ class ShapeImportDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ShapeImportDetailView, self).get_context_data(**kwargs)
         obj = context['object']
-        
+
         if not obj.finished:
             raise Http404
 

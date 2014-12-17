@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-02 12:07-0300\n"
+"POT-Creation-Date: 2014-12-17 14:57-0200\n"
 "PO-Revision-Date: 2014-10-02 12:10-0300\n"
 "Last-Translator: alvaro <alvaro@consultoriasigma.com.br>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,36 +17,44 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: shapeimport/forms.py:26
+#: shapeimport/forms.py:27
 msgid "Error while processing the shapefile, the file is corrupted."
 msgstr "Erro ao processar o shapefile, o arquivo está corrompido."
 
-#: shapeimport/forms.py:51
+#: shapeimport/forms.py:52
 msgid "There aren't any fields to map."
 msgstr "Não há nenhum campo para ser mapeado."
 
-#: shapeimport/forms.py:85
+#: shapeimport/forms.py:86
 msgid "Don't import"
 msgstr "Não Importar"
 
-#: shapeimport/forms.py:91
+#: shapeimport/forms.py:92
 msgid "Field on the shapefile to be used as the value for '{}'"
 msgstr "Arquivo no shapefile que será usado como valor para '{}'"
 
-#: shapeimport/models.py:30
+#: shapeimport/models.py:31
 msgid "Compressed shapefile, must contain the .shp, .shx, .dbf and .prj files"
-msgstr "Shapefile compactado, precisa conter os arquivos .shp, .shx, .dbf e .prj"
+msgstr ""
+"Shapefile compactado, precisa conter os arquivos .shp, .shx, .dbf e .prj"
 
-#: shapeimport/models.py:37
+#: shapeimport/models.py:38
 msgid "Finished?"
 msgstr "Finalizada?"
 
-#: shapeimport/models.py:38
-msgid "Indicates wether or not the import of the shapefile.is finished (False means there's something pending, such as choosing the fields to map to)."
-msgstr "Inda se a importação do shapefile já foi finalizada. (Falso indica que há algo pendente, como escolher os campos para mapear os dados)."
+#: shapeimport/models.py:39
+msgid ""
+"Indicates wether or not the import of the shapefile.is finished (False means "
+"there's something pending, such as choosing the fields to map to)."
+msgstr ""
+"Inda se a importação do shapefile já foi finalizada. (Falso indica que há "
+"algo pendente, como escolher os campos para mapear os dados)."
 
-#: shapeimport/models.py:82
-#| msgid "The files are not all from the same shapefile."
+#: shapeimport/models.py:45
+msgid "Created at"
+msgstr "Criado em"
+
+#: shapeimport/models.py:88
 msgid "FID of the feature in the shapefile."
 msgstr "FID da feição no shapefile."
 
@@ -58,17 +66,14 @@ msgstr "O Handler precisa herdar a classe ShapefileHandler"
 msgid "Unrecognized file type."
 msgstr "Tipo de arquivo não reconhecido."
 
-#: shapeimport/util.py:78
-#: shapeimport/util.py:89
-#: shapeimport/util.py:99
+#: shapeimport/util.py:78 shapeimport/util.py:89 shapeimport/util.py:99
 msgid "Invalid zip file, it's either corrupted or not a zip."
 msgstr "Arquivo zip inválido. Está corrompido ou não é um zip."
 
-#: shapeimport/util.py:146
+#: shapeimport/util.py:149
 msgid "The files are not all from the same shapefile."
 msgstr "Os arquivos não são todos do mesmo shapefile."
 
 #: shapeimport/util.py:155
 msgid "The following files are missing in the shapefile: {}"
 msgstr "Os seguintes arquivos estão faltando no shapefile: {}"
-
