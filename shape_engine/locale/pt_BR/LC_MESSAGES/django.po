@@ -31,7 +31,7 @@ msgstr "Não Importar"
 
 #: shapeimport/forms.py:92
 msgid "Field on the shapefile to be used as the value for '{}'"
-msgstr "Arquivo no shapefile que será usado como valor para '{}'"
+msgstr "Campo no shapefile que será usado como valor para '{}'"
 
 #: shapeimport/models.py:31
 msgid "Compressed shapefile, must contain the .shp, .shx, .dbf and .prj files"
