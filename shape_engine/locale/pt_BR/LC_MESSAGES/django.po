@@ -38,6 +38,9 @@ msgid "Compressed shapefile, must contain the .shp, .shx, .dbf and .prj files"
 msgstr ""
 "Shapefile compactado, precisa conter os arquivos .shp, .shx, .dbf e .prj"
 
+msgid "Zipped shapefile."
+msgstr "Shapefile zipado."
+
 #: shapeimport/models.py:38
 msgid "Finished?"
 msgstr "Finalizada?"
