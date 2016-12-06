@@ -20,7 +20,7 @@ class ShpResponder(object):
         self.mimetype = mimetype
         self.file_name = smart_str(file_name)
         self.attribute_fields = attribute_fields or []
-        self.model_field_names = self.queryset.model._meta.get_all_field_names()
+        self.model_field_names = [f.name for f in self.queryset.model._meta.get_fields()]
         self.encoding = encoding
 
     def __call__(self, *args, **kwargs):
