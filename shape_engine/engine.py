@@ -75,7 +75,7 @@ class BaseShapefileWriter(object):
 
         self._reset_writer_state()
 
-        self.model_field_names = queryset.model._meta.get_all_field_names()
+        self.model_field_names = [f.name for f in queryset.model._meta.get_fields()]
         self.choice_display = choice_display
 
         features = []
@@ -298,7 +298,7 @@ class FionaShapefileWriter(BaseShapefileWriter):
 
         self._reset_writer_state()
 
-        self.model_field_names = queryset.model._meta.get_all_field_names()
+        self.model_field_names = [f.name for f in queryset.model._meta.get_fields()]
         self.choice_display = choice_display
 
         export_fields = self._get_fields_from_atributes(queryset, attributes)
