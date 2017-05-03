@@ -42,19 +42,6 @@ class FieldMapping(object):
 
         self.engine = field_maps[0].engine
         self.field_maps = field_maps
-        self.uniquefy_fields()
-
-    def uniquefy_fields(self):
-
-        field_names = [fm.field_in[:10] for fm in self.field_maps]
-        counts = Counter(field_names)
-        colliding = [c[0] for c in counts if c.items() if c[1] > 1]
-        for c in colliding:
-            counter = 1
-            for fm in self.field_maps:
-                if c == fm.field_in[:10]:
-                    fm.field_out = fm.field_out[:8] + '_%s' % counter
-                    counter += 1
 
     def get_field_out_names(self):
 
@@ -157,12 +144,12 @@ class BaseFieldMapper(object):
         """
         Resolve name conflicts for fields
         """
-
         new_fields = []
         for i, fm in enumerate(mappings):
 
             new_name = fm.field_in.name[:size]
             if new_name not in new_fields:
+                new_fields.append(new_name)
                 continue
             else:
                 c = 1
@@ -172,9 +159,8 @@ class BaseFieldMapper(object):
                     new_name = "%s_%d" % (new_name[:size-2], c)
 
                 new_fields.append(new_name)
-
                 if fm.engine == ENGINE_FIONA:
-                    fm.field_out[0] = new_name
+                    fm.field_out = (new_name, fm.field_out[1], )
 
                 if fm.engine == ENGINE_NATIVE:
                     fm.field_out.SetName(new_name)
