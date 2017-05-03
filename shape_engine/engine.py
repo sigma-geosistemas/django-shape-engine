@@ -84,7 +84,7 @@ class BaseShapefileWriter(object):
 
         field_mapper = FieldMapper.create(self.engine)
         fieldmapping = field_mapper.map_fields(export_fields)
-        layer, datasource = self._create_layer(tmp_name,fieldmapping,geofield,out_srid,encoding)
+        layer, datasource = self._create_layer(tmp_name, fieldmapping, geofield, out_srid, encoding)
 
         self._write_records(queryset, fieldmapping, geofield, layer, in_srid, out_srid)
 
@@ -306,7 +306,6 @@ class FionaShapefileWriter(BaseShapefileWriter):
         self.choice_display = choice_display
 
         export_fields = self._get_fields_from_atributes(queryset, attributes)
-
         field_mapper = FieldMapper.create(engine=ENGINE_FIONA, mapping=None)
         fieldmapping = field_mapper.map_fields(export_fields)
 
