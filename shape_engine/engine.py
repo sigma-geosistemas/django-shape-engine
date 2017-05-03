@@ -188,6 +188,7 @@ class BaseShapefileWriter(object):
     def _create_feature(self, item, fieldmapping, geofield, layer, in_srid, out_srid):
         raise NotImplemented
 
+
 class FionaShapefileWriter(BaseShapefileWriter):
 
     def _get_geometry_type(self, geofield):

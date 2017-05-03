@@ -1,4 +1,5 @@
 # coding: utf-8
+from collections import Counter
 from django.contrib.gis.gdal.field import ROGRFieldTypes
 from . import *
 
@@ -41,6 +42,19 @@ class FieldMapping(object):
 
         self.engine = field_maps[0].engine
         self.field_maps = field_maps
+        self.uniquefy_fields()
+
+    def uniquefy_fields(self):
+
+        field_names = [fm.field_in[:10] for fm in self.field_maps]
+        counts = Counter(field_names)
+        colliding = [c[0] for c in counts if c.items() if c[1] > 1]
+        for c in colliding:
+            counter = 1
+            for fm in self.field_maps:
+                if c == fm.field_in[:10]:
+                    fm.field_out = fm.field_out[:8] + '_%s' % counter
+                    counter += 1
 
     def get_field_out_names(self):
 
