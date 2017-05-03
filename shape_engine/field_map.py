@@ -1,6 +1,5 @@
 # coding: utf-8
 from django.contrib.gis.gdal.field import ROGRFieldTypes
-
 from . import *
 
 
@@ -20,6 +19,7 @@ class FieldMap(object):
         self.engine = engine
         self.field_in = field_in
         self.field_out = field_out
+
 
 class FieldMapping(object):
 
@@ -110,7 +110,6 @@ class FieldMapping(object):
 
         return [fm.field_out.name for fm in field_maps]
 
-
     def _get_field_out_names_native(self, field_maps):
 
         """
@@ -118,6 +117,7 @@ class FieldMapping(object):
         """
 
         return [fm.field_out.GetName() for fm in field_maps]
+
 
 class BaseFieldMapper(object):
 

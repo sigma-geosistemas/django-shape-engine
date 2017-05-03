@@ -29,9 +29,9 @@ try:
                              DecimalField: "float",
                              FloatField: "float",
 
-                             DateField: "str",
-                             TimeField: "str",
-                             DateTimeField: "str"}
+                             DateField: "date",
+                             TimeField: "time",
+                             DateTimeField: "datetime"}
 
 except ImportError:
     HAS_FIONA = False
