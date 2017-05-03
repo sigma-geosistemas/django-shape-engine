@@ -132,13 +132,16 @@ class BaseShapefileWriter(object):
 
         if field_mapping.field_in.name in self.model_field_names:
 
-            # model
+            internal_type = field_in.get_internal_type()
 
             if field_in.choices:
                 return self._get_choice_value(item, field_name)
 
-            if field_in.get_internal_type() == "ForeignKey":
+            if internal_type == "ForeignKey":
                 return unicode(getattr(item, field_name))
+
+            if internal_type in ('DateTimeField', 'TimeField'):
+                return getattr(item, field_mapping.field_in.name).isoformat()
 
             return getattr(item, field_mapping.field_in.name)
 
